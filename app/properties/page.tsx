@@ -26,7 +26,7 @@ const page = async () => {
               <form className="max-w-sm mx-auto">
                 <label
                   htmlFor="countries"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white "
                 >
                   Select an option
                 </label>

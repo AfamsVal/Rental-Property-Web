@@ -1,15 +1,18 @@
 "use client";
+import Loader from "@/components/Loader";
 import { fetchProperty } from "@/utils/request";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { FaAngleDoubleLeft } from "react-icons/fa";
 
 const PropertyPage = () => {
   const { id }: { id: string } = useParams();
   console.log(id);
 
-  const [property, setProperty] = useState<any>({});
-  const [loading, setLoading] = useState<boolean>(false);
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getProperty = async () => {
@@ -41,10 +44,27 @@ const PropertyPage = () => {
       </h1>
     );
   }
+  if (!property && loading) {
+    return (
+      // <h1 className="text-center text-orange-600 py-48 bg-gray-800">
+      //   Loading...
+      // </h1>
+      <Loader loading={loading} />
+    );
+  }
 
   return (
     <div className="bg-gray-100 dark:bg-gray-800 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div>
+          <Link
+            href="/properties"
+            className="flex items-center text-white mb-4"
+          >
+            {" "}
+            <FaAngleDoubleLeft /> Back
+          </Link>
+        </div>
         <div className="flex flex-col md:flex-row -mx-4">
           <div className="md:flex-1 px-4">
             <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
@@ -57,6 +77,7 @@ const PropertyPage = () => {
                 className="h-full w-full object-cover"
                 src={`/images/properties/${property?.images?.[0]}`}
                 alt="Property one"
+                priority={true}
               />
             </div>
             <div className="flex -mx-2 mb-4">

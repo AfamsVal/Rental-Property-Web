@@ -6,9 +6,9 @@ const override = {
   margin: "0 auto",
 };
 
-const LoadingPage = ({ loading }: { loading: boolean }) => {
+const Loader = ({ loading }: { loading: boolean }) => {
   return (
-    <div className="py-24">
+    <div className="py-24 bg-gray-900">
       <ClipLoader
         color="rgb(234 88 12)"
         loading={loading}
@@ -21,4 +21,4 @@ const LoadingPage = ({ loading }: { loading: boolean }) => {
   );
 };
 
-export default LoadingPage;
+export default Loader;
