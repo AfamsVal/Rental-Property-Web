@@ -1,9 +1,16 @@
-import Image from "next/image";
 import React from "react";
-import properties from "@/properties.json";
 import PropertyCard from "@/components/properties/PropertyCard";
+import { fetchProperties } from "@/utils/request";
 
-const page = () => {
+const page = async () => {
+  const properties = await fetchProperties();
+
+  properties.sort((a: { createdAt: Date }, b: { createdAt: Date }) => {
+    const dateA: Date = new Date(a.createdAt);
+    const dateB: Date = new Date(b.createdAt);
+
+    return dateB.getTime() - dateA.getTime();
+  });
   return (
     <section className="bg-gray-50 py-24">
       <div className="container mx-auto px-4">
@@ -15,12 +22,31 @@ const page = () => {
             <h3 className="capitalize font-bold mb-4 text-4xl text-gray-900">
               Cars for all your needs
             </h3>
-            <div className="bg-primary-500 mb-6 pb-1 w-2/12"></div>
+            <div className="bg-primary-500 mb-6 pb-1 w-2/12">
+              <form className="max-w-sm mx-auto">
+                <label
+                  htmlFor="countries"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Select an option
+                </label>
+                <select
+                  id="countries"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                  <option selected>Sort By:</option>
+                  <option value="ASC">Ascending States</option>
+                  <option value="DSC">Descending</option>
+                </select>
+              </form>
+            </div>
           </div>
         </div>
         <div className="-mx-3 flex flex-wrap mb-12">
           {properties.length > 0
-            ? properties.map((item, i) => <PropertyCard key={i} item={item} />)
+            ? properties.map((item: any, i: number) => (
+                <PropertyCard key={i} item={item} />
+              ))
             : "No Properties Found!"}
         </div>
         <div className="text-center">

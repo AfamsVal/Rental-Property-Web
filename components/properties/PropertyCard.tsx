@@ -1,7 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const PropertyCard = ({ item }: any) => {
+  const getRating = () => {
+    const { rates } = item;
+    if (rates.monthly) return `${rates.monthly.toLocaleString()}/Mo`;
+    if (rates.weekly) return `${rates.weekly.toLocaleString()}/Wk`;
+    if (rates.nightly) return `${rates.nightly.toLocaleString()}/Day`;
+  };
   return (
     <div className="p-3 w-full md:w-6/12 lg:w-4/12">
       <div className="bg-white border shadow-md text-gray-500">
@@ -19,13 +26,21 @@ const PropertyCard = ({ item }: any) => {
         </a>
         <div className="p-6">
           <h4 className="font-bold mb-2 text-gray-900 text-xl">
-            <a href="#" className="hover:text-gray-500">
+            <Link
+              href={`properties/${item._id}`}
+              className="hover:text-gray-500"
+            >
               {item.name}
-            </a>
+            </Link>
           </h4>
+          <p className="mb-2 text-sm">{item.description}</p>
           <p className="mb-2 text-sm">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            {item.baths} Bath(s) | {item.square_feet} sqft
           </p>
+          <p className="mb-2 text-sm">
+            {item.location.city}, {item.location.state}
+          </p>
+          <p>{new Date(item.createdAt).toLocaleString()}</p>
           <hr className="border-gray-200 my-4" />
           <div className="flex items-center justify-between">
             <div className="inline-flex items-center py-1 space-x-1">
@@ -45,7 +60,7 @@ const PropertyCard = ({ item }: any) => {
               </svg>
               <span>(546 reviews)</span>
             </div>
-            <p className="font-bold text-gray-900">$45/day</p>
+            <p className="font-bold text-gray-900">₦{getRating()}</p>
           </div>
         </div>
       </div>
