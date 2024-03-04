@@ -25,8 +25,6 @@ const Navbar = () => {
     setAuthProviders();
   }, []);
 
-  console.log("Providers:", providers);
-
   const pathname = usePathname();
 
   return (
