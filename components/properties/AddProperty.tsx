@@ -70,8 +70,37 @@ const AddProperty = () => {
     }
   };
 
-  const handleAmenitiesChange = () => {};
-  const handleImageChange = () => {};
+  const handleAmenitiesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    const updatedAmenities = [...property.amenities];
+
+    if (checked) {
+      updatedAmenities.push(value);
+    } else {
+      const index = updatedAmenities.indexOf(value);
+      if (index !== -1) {
+        updatedAmenities.splice(index, 1);
+      }
+    }
+
+    setProperty((prevState) => ({
+      ...prevState,
+      amenities: updatedAmenities,
+    }));
+  };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    const updatedImage = [...property.images];
+    for (let file in files) {
+      updatedImage.push(file);
+    }
+
+    setProperty((prevState) => ({ ...property, images: updatedImage }));
+  };
+
+  const handleSubmit = () => {
+    console.log("Property:", property);
+  };
 
   return (
     mounted && (
@@ -85,7 +114,12 @@ const AddProperty = () => {
             </h1>
           </div>
         </div>
-        <div className="px-5 pb-5">
+        <form
+          action="api/properties"
+          method="POST"
+          encType="multipart/form-data"
+          className="px-5 pb-5"
+        >
           <div className="mb-4">
             <input
               placeholder="Listing Name"
@@ -159,56 +193,46 @@ const AddProperty = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center pt-3">
+          {["Mountain View", "Hiking Trails Access", "Wifi"].map((item, i) => (
+            <div key={i} className="flex items-center pt-3">
+              <input
+                checked={property.amenities.includes(item)}
+                value={item}
+                onChange={handleAmenitiesChange}
+                type="checkbox"
+                className="w-4 h-4 text-black bg-gray-300 border-none rounded-md focus:ring-transparent"
+              />
+              <label
+                htmlFor="safeAdress"
+                className="block ml-2 text-sm text-gray-900"
+              >
+                {item}
+              </label>
+            </div>
+          ))}
+        </form>
+        <div className="px-5 py-5">
+          <h3 className="inline text-xl text-gray-500 font-semibold leading-none">
+            Upload Image
+          </h3>
+          <div className="mt-2">
             <input
-              type="checkbox"
-              className="w-4 h-4 text-black bg-gray-300 border-none rounded-md focus:ring-transparent"
+              id="images"
+              name="images"
+              onChange={handleImageChange}
+              className="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              type="file"
+              accept="image/*"
+              multiple
             />
-            <label
-              htmlFor="safeAdress"
-              className="block ml-2 text-sm text-gray-900"
-            >
-              Save as default address
-            </label>
           </div>
         </div>
-        <div className="flex">
-          <div className="flex-1 py-5 pl-5 overflow-hidden">
-            <h1 className="inline text-2xl font-semibold leading-none">
-              Receiver
-            </h1>
-          </div>
-          <div className="flex-none pt-2.5 pr-2.5 pl-1" />
-        </div>
-        <div className="px-5 pb-5">
-          <input
-            placeholder="Name"
-            className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-200 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
-          />
-          <input
-            placeholder="Address"
-            className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-200 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
-          />
-          <div className="flex">
-            <div className="flex-grow w-1/4 pr-2">
-              <input
-                placeholder="PLZ"
-                className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-200 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
-              />
-            </div>
-            <div className="flex-grow">
-              <input
-                placeholder="City"
-                className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:bg-white dark:focus:bg-gray-200 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
-              />
-            </div>
-          </div>
-        </div>
+
         <hr className="mt-4" />
         <div className="flex flex-row-reverse p-3">
           <div className="flex-initial pl-3">
             <button
-              type="button"
+              onClick={handleSubmit}
               className="flex items-center px-5 py-2.5 font-medium tracking-wide text-white capitalize   bg-gray-600 rounded-md hover:bg-gray-800  focus:outline-none focus:bg-gray-900  transition duration-300 transform active:scale-95 ease-in-out"
             >
               <FaRegSave style={{ fontSize: "20px" }} />
@@ -222,7 +246,7 @@ const AddProperty = () => {
             >
               <FaRegTrashAlt style={{ fontSize: "20px" }} />
 
-              <span className="pl-2 mx-1">Delete</span>
+              <span className="pl-2 mx-1">Clear</span>
             </button>
           </div>
         </div>

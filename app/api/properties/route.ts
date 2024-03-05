@@ -64,9 +64,12 @@ export const PUT = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
+export const POST = async (req: any, res: NextApiResponse) => {
   // Create a new property
   try {
+    const formData = await req.formData();
+    const amenities = await formData.getAll();
+
     const property = await PropertyModel.create(req.body);
     return new Response(
       JSON.stringify({
