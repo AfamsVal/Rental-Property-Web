@@ -224,6 +224,7 @@ const AddProperty = () => {
               type="file"
               accept="image/*"
               multiple
+              required
             />
           </div>
         </div>

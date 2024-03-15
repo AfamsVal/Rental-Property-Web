@@ -69,15 +69,21 @@ export const POST = async (req: any, res: NextApiResponse) => {
   try {
     const formData = await req.formData();
     const amenities = await formData.getAll("amenities");
+    const images = await formData
+      .getAll("images")
+      .filter((image: any) => image.name !== "");
 
-    const property = await PropertyModel.create(req.body);
-    return new Response(
-      JSON.stringify({
-        success: true,
-        data: property,
-      }),
-      { status: 201 }
-    );
+    console.log("Amenities", amenities);
+    console.log("Images", images);
+
+    // const property = await PropertyModel.create(req.body);
+    // return new Response(
+    //   JSON.stringify({
+    //     success: true,
+    //     data: property,
+    //   }),
+    //   { status: 201 }
+    // );
   } catch (error) {
     return new Response(
       JSON.stringify({
